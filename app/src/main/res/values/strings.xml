@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Ju Jitsu Pose Detection</string>
+
+    <string name="pref_key_camera_live_viewport">clv</string>
+    <string name="pref_key_rear_camera_preview_size">rcpvs</string>
+    <string name="pref_key_rear_camera_picture_size">rcpts</string>
+    <string name="pref_key_info_hide">ih</string>
+    <string name="pref_key_live_preview_object_detector_enable_multiple_objects">lpodemo</string>
+    <string name="pref_key_live_preview_object_detector_enable_classification">lpodec</string>
+    <string name="pref_key_live_preview_pose_detector_show_in_frame_likelihood">lppdsifl</string>
+    <string name="pref_key_pose_detector_visualize_z">pdvz</string>
+    <string name="pref_key_pose_detector_rescale_z">pdrz</string>
+    <string name="pref_key_pose_detector_run_classification">pdrc</string>
+    <string name="pref_key_live_preview_pose_detection_performance_mode">lppdpm</string>
+    <string name="pref_key_pose_detector_prefer_gpu">pdpg</string>
+</resources>
