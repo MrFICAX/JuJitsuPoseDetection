@@ -42,14 +42,11 @@ public class PoseEmbedding {
 
   private static List<PointF3D> normalize(List<PointF3D> landmarks) {
     List<PointF3D> normalizedLandmarks = new ArrayList<>(landmarks);
-    // Normalize translation.
     PointF3D center = average(
         landmarks.get(PoseLandmark.LEFT_HIP), landmarks.get(PoseLandmark.RIGHT_HIP));
     subtractAll(center, normalizedLandmarks);
 
-    // Normalize scale.
     multiplyAll(normalizedLandmarks, 1 / getPoseSize(normalizedLandmarks));
-    // Multiplication by 100 is not required, but makes it easier to debug.
     multiplyAll(normalizedLandmarks, 100);
     return normalizedLandmarks;
   }

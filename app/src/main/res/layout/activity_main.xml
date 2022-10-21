@@ -44,18 +44,29 @@
             android:id="@+id/facing_switch"
             android:layout_width="48dp"
             android:layout_height="48dp"
+            android:layout_marginStart="5dp"
             android:layout_gravity="center_vertical"
             android:background="@layout/toggle_style"
             android:checked="false"
             android:textOff=""
             android:textOn=""/>
 
-        <Spinner
-            android:id="@+id/spinner"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"/>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonFinish"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="5dp"
+            android:background="@drawable/rectangle_9_shape"
+            android:text="ZAVRŠI VEŽBANJE"
+            android:textColor="@color/white"
+            android:textSize="21sp"
+            android:textStyle="bold"
+            app:backgroundTint="@color/pink"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.504"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </LinearLayout>
 

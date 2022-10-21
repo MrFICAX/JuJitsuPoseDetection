@@ -16,32 +16,42 @@
 
 package elfak.diplomski.jujitsuposedetection.posedetector.classification;
 
+import android.content.Context;
+import android.media.MediaPlayer;
+
+import elfak.diplomski.jujitsuposedetection.R;
+
 /**
  * Counts reps for the give class.
  */
 public class RepetitionCounter {
   // These thresholds can be tuned in conjunction with the Top K values in {@link PoseClassifier}.
   // The default Top K value is 10 so the range here is [0-10].
-  private static final float DEFAULT_ENTER_THRESHOLD = 6f;
-  private static final float DEFAULT_EXIT_THRESHOLD = 4f;
+  private static final float DEFAULT_ENTER_THRESHOLD = 8f;
+  private static final float DEFAULT_EXIT_THRESHOLD = 6f;
 
   private final String className;
   private final float enterThreshold;
   private final float exitThreshold;
+  private final Context context;
+  private static MediaPlayer mp;
+
 
   private int numRepeats;
   private boolean poseEntered;
 
-  public RepetitionCounter(String className) {
-    this(className, DEFAULT_ENTER_THRESHOLD, DEFAULT_EXIT_THRESHOLD);
+  public RepetitionCounter(Context context, String className) {
+    this(context, className, DEFAULT_ENTER_THRESHOLD, DEFAULT_EXIT_THRESHOLD);
   }
 
-  public RepetitionCounter(String className, float enterThreshold, float exitThreshold) {
+  public RepetitionCounter(Context context, String className, float enterThreshold, float exitThreshold) {
+    this.context = context;
     this.className = className;
     this.enterThreshold = enterThreshold;
     this.exitThreshold = exitThreshold;
     numRepeats = 0;
     poseEntered = false;
+
   }
 
   /**
@@ -53,10 +63,12 @@ public class RepetitionCounter {
   public int addClassificationResult(ClassificationResult classificationResult) {
     float poseConfidence = classificationResult.getClassConfidence(className);
 
+
     if (!poseEntered) {
       poseEntered = poseConfidence > enterThreshold;
       return numRepeats;
     }
+
 
     if (poseConfidence < exitThreshold) {
       numRepeats++;

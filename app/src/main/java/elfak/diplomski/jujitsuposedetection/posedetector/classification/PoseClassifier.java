@@ -93,7 +93,6 @@ public class PoseClassifier {
       return result;
     }
 
-    // We do flipping on X-axis so we are horizontal (mirror) invariant.
     List<PointF3D> flippedLandmarks = new ArrayList<>(landmarks);
     multiplyAll(flippedLandmarks, PointF3D.from(-1, 1, 1));
 
@@ -107,10 +106,9 @@ public class PoseClassifier {
     //  * Then we pick top-K samples by MEAN distance. After outliers are removed, we pick samples
     //    that are closest by average.
 
-    // Keeps max distance on top so we can pop it when top_k size is reached.
+
     PriorityQueue<Pair<PoseSample, Float>> maxDistances = new PriorityQueue<>(
         maxDistanceTopK, (o1, o2) -> -Float.compare(o1.second, o2.second));
-    // Retrieve top K poseSamples by least distance to remove outliers.
     for (PoseSample poseSample : poseSamples) {
       List<PointF3D> sampleEmbedding = poseSample.getEmbedding();
 
@@ -128,18 +126,14 @@ public class PoseClassifier {
                     multiply(
                         subtract(flippedEmbedding.get(i), sampleEmbedding.get(i)), axesWeights)));
       }
-      // Set the max distance as min of original and flipped max distance.
       maxDistances.add(new Pair<>(poseSample, min(originalMax, flippedMax)));
-      // We only want to retain top n so pop the highest distance.
       if (maxDistances.size() > maxDistanceTopK) {
         maxDistances.poll();
       }
     }
 
-    // Keeps higher mean distances on top so we can pop it when top_k size is reached.
     PriorityQueue<Pair<PoseSample, Float>> meanDistances = new PriorityQueue<>(
         meanDistanceTopK, (o1, o2) -> -Float.compare(o1.second, o2.second));
-    // Retrive top K poseSamples by least mean distance to remove outliers.
     for (Pair<PoseSample, Float> sampleDistances : maxDistances) {
       PoseSample poseSample = sampleDistances.first;
       List<PointF3D> sampleEmbedding = poseSample.getEmbedding();
@@ -152,10 +146,8 @@ public class PoseClassifier {
         flippedSum += sumAbs(
             multiply(subtract(flippedEmbedding.get(i), sampleEmbedding.get(i)), axesWeights));
       }
-      // Set the mean distance as min of original and flipped mean distances.
       float meanDistance = min(originalSum, flippedSum) / (embedding.size() * 2);
       meanDistances.add(new Pair<>(poseSample, meanDistance));
-      // We only want to retain top k so pop the highest mean distance.
       if (meanDistances.size() > meanDistanceTopK) {
         meanDistances.poll();
       }

@@ -26,6 +26,7 @@ import com.google.mlkit.vision.pose.PoseDetection
 import com.google.mlkit.vision.pose.PoseDetector
 import com.google.mlkit.vision.pose.PoseDetectorOptionsBase
 import elfak.diplomski.jujitsuposedetection.posedetector.classification.PoseClassifierProcessor
+import elfak.diplomski.jujitsuposedetection.viewmodels.resultsViewModel
 import java.util.ArrayList
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
@@ -38,7 +39,8 @@ class PoseDetectorProcessor(
   private val visualizeZ: Boolean,
   private val rescaleZForVisualization: Boolean,
   private val runClassification: Boolean,
-  private val isStreamMode: Boolean
+  private val isStreamMode: Boolean,
+  private val resultsViewModel: resultsViewModel
 ) : VisionProcessorBase<PoseDetectorProcessor.PoseWithClassification>(context) {
 
   private val detector: PoseDetector
@@ -65,11 +67,11 @@ class PoseDetectorProcessor(
       .continueWith(
         classificationExecutor
       ) { task ->
-        val pose = task.getResult()
+        val pose = task.result
         var classificationResult: List<String> = ArrayList()
         if (runClassification) {
           if (poseClassifierProcessor == null) {
-            poseClassifierProcessor = PoseClassifierProcessor(context, isStreamMode)
+            poseClassifierProcessor = PoseClassifierProcessor(context, isStreamMode, resultsViewModel)
           }
           classificationResult = poseClassifierProcessor!!.getPoseResult(pose)
         }
@@ -77,6 +79,7 @@ class PoseDetectorProcessor(
       }
   }
 
+  //Ova metoda se koristi za detekciju
   override fun detectInImage(image: MlImage): Task<PoseWithClassification> {
     return detector
       .process(image)
@@ -87,7 +90,7 @@ class PoseDetectorProcessor(
         var classificationResult: List<String> = ArrayList()
         if (runClassification) {
           if (poseClassifierProcessor == null) {
-            poseClassifierProcessor = PoseClassifierProcessor(context, isStreamMode)
+            poseClassifierProcessor = PoseClassifierProcessor(context, isStreamMode, resultsViewModel)
           }
           classificationResult = poseClassifierProcessor!!.getPoseResult(pose)
         }

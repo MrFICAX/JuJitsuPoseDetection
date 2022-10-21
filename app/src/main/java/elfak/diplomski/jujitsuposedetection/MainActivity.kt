@@ -2,9 +2,11 @@ package elfak.diplomski.jujitsuposedetection
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import android.widget.CompoundButton
 import android.widget.Toast
 import android.widget.ToggleButton
@@ -13,11 +15,14 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.mlkit.vision.pose.PoseDetectorOptionsBase
 import elfak.diplomski.jujitsuposedetection.preference.PreferenceUtils
+import elfak.diplomski.jujitsuposedetection.viewmodels.resultsViewModel
 import java.io.IOException
+import androidx.activity.viewModels
 
 class MainActivity : AppCompatActivity(), CompoundButton.OnCheckedChangeListener {
 
-    //private val OBJECT_DETECTION = "Object Detection"
+    private val resultsViewModel: resultsViewModel by viewModels()
+
     private val POSE_DETECTION = "Pose Detection"
 
     private  val  TAG: String = "LivePreviewActivity"
@@ -32,6 +37,14 @@ class MainActivity : AppCompatActivity(), CompoundButton.OnCheckedChangeListener
         setContentView(R.layout.activity_main)
         Log.d(TAG, "onCreate")
 
+        var button: Button = findViewById(R.id.buttonFinish)
+        button.setOnClickListener{
+
+            val intent: Intent = Intent(this, ResultActivity::class.java)
+            intent.putExtra("map", this.resultsViewModel.repCounter.value)
+
+            startActivity(intent)
+        }
 
         if (!allRuntimePermissionsGranted()) {
             getRuntimePermissions()
@@ -184,7 +197,8 @@ class MainActivity : AppCompatActivity(), CompoundButton.OnCheckedChangeListener
                             visualizeZ,
                             rescaleZ,
                             runClassification,  /* isStreamMode = */
-                            true
+                            true,
+                            resultsViewModel
                         )
                     )
                 }

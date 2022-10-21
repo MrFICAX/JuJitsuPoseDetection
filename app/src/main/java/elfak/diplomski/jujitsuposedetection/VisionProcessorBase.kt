@@ -152,6 +152,7 @@ abstract class VisionProcessorBase<T>(context: Context) : VisionImageProcessor {
     }
   }
 
+  //Ova metoda se koristi
   private fun processImage(
     data: ByteBuffer,
     frameMetadata: FrameMetadata,
@@ -261,6 +262,7 @@ abstract class VisionProcessorBase<T>(context: Context) : VisionImageProcessor {
     )
   }
 
+  //Ova metoda se koristi
   private fun requestDetectInImage(
     image: MlImage,
     graphicOverlay: GraphicOverlay,
